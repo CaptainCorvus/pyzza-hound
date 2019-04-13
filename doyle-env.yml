@@ -1,0 +1,9 @@
+name: doyle-env
+channels:
+        - conda-forge
+dependencies:
+        - numpy
+        - pandas
+        - bottle
+        - matplotlib
+
