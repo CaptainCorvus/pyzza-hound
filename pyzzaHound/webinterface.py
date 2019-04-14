@@ -7,6 +7,10 @@ import json
 app = Bottle()
 
 
+@app.route('/doyle-api/test')
+def test():
+    return True
+
 @app.route('/doyle-api/basic-plot')
 def basic_plot():
     x = np.arange(0, 10, .1)
