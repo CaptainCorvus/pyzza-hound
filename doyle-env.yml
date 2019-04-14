@@ -1,4 +1,4 @@
-name: doyle-env
+name: doyle
 channels:
         - conda-forge
 dependencies:
@@ -6,4 +6,5 @@ dependencies:
         - pandas
         - bottle
         - matplotlib
+        - json
 
