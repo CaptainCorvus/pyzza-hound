@@ -81,7 +81,7 @@ while True:
 
     temp_f = _convert_c_to_f(temp_c)
 
-    print("time: {0}".format(time))
+    print("\ntime: {0}".format(time))
     print('{0} C'.format(temp_c))
     print('{0} F'.format(temp_f))
 
