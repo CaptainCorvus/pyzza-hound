@@ -80,10 +80,10 @@ while True:
         continue
 
     temp_f = _convert_c_to_f(temp_c)
-
-    print("\ntime: {0}".format(time))
-    print('{0} C'.format(temp_c))
-    print('{0} F'.format(temp_f))
+    if "-p" in sys.argv:
+        print("\ntime: {0}".format(time))
+        print('{0} C'.format(temp_c))
+        print('{0} F'.format(temp_f))
 
     t.sleep(1)
 
