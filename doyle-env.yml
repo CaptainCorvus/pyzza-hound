@@ -1,0 +1,10 @@
+name: doyle
+channels:
+        - conda-forge
+dependencies:
+        - numpy
+        - pandas
+        - bottle
+        - matplotlib
+        - json
+
