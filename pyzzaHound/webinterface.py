@@ -1,7 +1,7 @@
-import numpy as np
-from bottle import Bottle, run, request
 import json
 
+import numpy as np
+from bottle import Bottle, run, request
 
 app = Bottle()
 
