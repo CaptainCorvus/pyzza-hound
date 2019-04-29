@@ -3,6 +3,7 @@ import sys
 import time as t
 import glob
 import datetime as dt
+import pyzzaHound.SensorDB as sdb
 
 
 # command line switch to use local test data instead of sensor
@@ -85,5 +86,12 @@ while True:
         print('{0} C'.format(temp_c))
         print('{0} F'.format(temp_f))
 
-    t.sleep(1)
+    reading = {
+        'Time': time,
+        'Temp_c': temp_c,
+        'Temp_f': temp_f,
+        'Device': 'Pecan'
+    }
+
+    t.sleep(20)
 
