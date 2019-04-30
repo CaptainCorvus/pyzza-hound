@@ -22,7 +22,7 @@ class Devices(Base):
 
 
 class TemperatureData(Base):
-    __tablename__ = 'temperature data'
+    __tablename__ = 'temperature_data'
     id      = Column(Integer, primary_key=True)
     Time    = Column(DateTime)
     Temp_c  = Column(Float)
