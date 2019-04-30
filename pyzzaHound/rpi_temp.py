@@ -3,7 +3,9 @@ import sys
 import time as t
 import glob
 import datetime as dt
+import sys
 
+import SensorDB as sdb
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
@@ -80,10 +82,17 @@ while True:
         continue
 
     temp_f = _convert_c_to_f(temp_c)
+    reading = {
+        'Time': time,
+        'Temp_c': temp_c,
+        'Temp_f': temp_f,
+        'Device': 'Pecan'
+    }
+    sdb.add_temperature_reading(reading)
     if "-p" in sys.argv:
         print("\ntime: {0}".format(time))
         print('{0} C'.format(temp_c))
         print('{0} F'.format(temp_f))
 
-    t.sleep(1)
+    t.sleep(600)
 
