@@ -11,7 +11,8 @@ Standard interface for connecting to the Sensor database
 
 engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
 Base   = declarative_base()
-
+# create session
+Session = sessionmaker(bind=engine)
 
 class Devices(Base):
     __tablename__ = 'devices'
@@ -30,35 +31,68 @@ class TemperatureData(Base):
     Device  = Column(VARCHAR(32))
 
 
+class Testing(Base):
+    __tablename__ = 'testing'
+    id = Column(Integer, primary_key=True)
+    comment = Column(VARCHAR(64))
+
+
 Devices.__table__.create(bind=engine, checkfirst=True)
 TemperatureData.__table__.create(bind=engine, checkfirst=True)
-
-# create session
-Session = sessionmaker(bind=engine)
+Testing.__table__.create(bind=engine, checkfirst=True)
 
 
-def add_device(new_device):
-    if not isinstance(new_device, dict):
-        raise TypeError
-    session = Session()
-    # if new_device in DEVICES.keys():
-    #     return 'not a new device'
+class SensorDBI:
+    def __init__(self):
+        self.session = Session()
 
-    session = Session()
-    entry = Devices(
-        Device   = new_device['device'],
-        Alias    = new_device['alias'],
-        Location = new_device['location']
-    )
-    session.add(entry)
-    session.commit()
+    def add_device(self, new_device):
+        """
+        TODO
+        :param new_device:
+        :return:
+        """
+        if not isinstance(new_device, dict):
+            raise TypeError
 
+        entry = Devices(
+            Device   = new_device['device'],
+            Alias    = new_device['alias'],
+            Location = new_device['location']
+        )
+        self.session.add(entry)
+        self.session.commit()
 
-def add_temperature_reading(new_reading):
-    if not isinstance(new_reading, dict):
-        raise TypeError
-    session = Session()
-    entry = TemperatureData(**new_reading)
-    session.add(entry)
-    session.commit()
+    def add_temperature_reading(self, new_reading):
+        """
+        TODO
+        :param new_reading:
+        :return:
+        """
+        if not isinstance(new_reading, dict):
+            raise TypeError
+
+        entry = TemperatureData(**new_reading)
+        self.session.add(entry)
+        self.session.commit()
+
+    def get_temp_readings(tstart, tstop, device=None):
+        """
+
+        :param tstart:
+        :param tstop:
+        :param device:
+        :return:
+        """
+
+        # TODO tstart, tstop should be datetime objects
+        return
+
+    def add_to_testing(self, test_entry):
+        if not isinstance(test_entry, dict):
+            raise TypeError
+
+        entry = Testing(**test_entry)
+        self.session.add(entry)
+        self.session.commit()
 

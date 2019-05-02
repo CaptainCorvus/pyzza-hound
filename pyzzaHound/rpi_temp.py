@@ -9,7 +9,7 @@ import SensorDB as sdb
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
-    base_dir      = './test_data'
+    base_dir      = './test'
     device_folder = glob.glob(base_dir + '/temp*')[0]
     device_file   = device_folder + '/test_w1_slave.txt'
 else:
