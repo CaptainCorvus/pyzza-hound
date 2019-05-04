@@ -42,7 +42,7 @@ TemperatureData.__table__.create(bind=engine, checkfirst=True)
 Testing.__table__.create(bind=engine, checkfirst=True)
 
 
-class SensorDBI:
+class DataInterface:
     def __init__(self):
         self.session = Session()
 

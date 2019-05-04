@@ -6,7 +6,7 @@ TEST_ENTRY = {
     'comment': 'testadelphia'
 }
 
-data_interface = SensorDB.SensorDBI()
+data_interface = SensorDB.DataInterface()
 
 # s.add_to_testing(TEST_ENTRY)
 tstop = datetime.datetime.now()
