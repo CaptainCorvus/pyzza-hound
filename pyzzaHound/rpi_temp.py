@@ -9,7 +9,7 @@ import SensorDB as sdb
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
-    base_dir      = './test_data'
+    base_dir      = './test'
     device_folder = glob.glob(base_dir + '/temp*')[0]
     device_file   = device_folder + '/test_w1_slave.txt'
 else:
@@ -26,6 +26,7 @@ else:
 def _convert_c_to_f(temp_c):
     temp_f = temp_c * (9.0 / 5) + 32.
     return temp_f
+
 
 def _validity_to_bool(is_valid):
     if is_valid == 'YES':
@@ -66,9 +67,6 @@ def parse_temperature():
     reading  = content[1]
     reading  = float(reading.split('=')[-1].strip()) / 1e3
 
-    # print('valid: {0}'.format(is_valid))
-    # print('temp: {0}'.format(reading))
-
     return is_valid, reading, dt.datetime.now()
 
 
@@ -82,17 +80,21 @@ while True:
         continue
 
     temp_f = _convert_c_to_f(temp_c)
+
+    # create dict from temperature reading
     reading = {
         'Time': time,
         'Temp_c': temp_c,
         'Temp_f': temp_f,
         'Device': 'Pecan'
     }
+
+    # write valid readings to the database
     sdb.add_temperature_reading(reading)
     if "-p" in sys.argv:
         print("\ntime: {0}".format(time))
         print('{0} C'.format(temp_c))
         print('{0} F'.format(temp_f))
 
-    t.sleep(600)
+    break
 
