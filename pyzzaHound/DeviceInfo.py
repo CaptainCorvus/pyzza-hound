@@ -15,3 +15,6 @@ DEVICES['pecan'] = {
     'device_location': 'router'
 }
 
+DEFAULT_DEVICES = {
+    'temperature': 'Pecan'
+}
