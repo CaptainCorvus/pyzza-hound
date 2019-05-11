@@ -1,12 +1,26 @@
 import json
-
+import os
 import numpy as np
-from bottle import Bottle, run, request
+import bottle
 
-app = Bottle()
+#app = bottle.Bottle()
 
 
-@app.route('/doyle-api/basic-plot')
+@bottle.route('/<path:path>')
+def serve_static_files(path):
+    cwd = os.getcwd()
+    parent = os.path.dirname(cwd)
+    app_dir = os.path.join(parent, 'webHound')
+    return bottle.static_file(path, app_dir)
+
+
+@bottle.get('/testing/<test>')
+def testing(test):
+    t = test
+    return json.dumps(t)
+
+
+@bottle.route('/doyle-api/basic-plot')
 def basic_plot():
     x = np.arange(0, 10, .1)
     y = np.random.random(100)
@@ -19,11 +33,11 @@ def basic_plot():
     return json_str
 
 
-@app.get('/doyle-api/basic-get')
+@bottle.get('/doyle-api/basic-get')
 def basic_get():
-    name    = request.query.name
-    purpose = request.query.purpose
-    urine   = request.query.urine
+    name    = bottle.request.query.name
+    purpose = bottle.request.query.purpose
+    urine   = bottle.request.query.urine
 
     output = '%s is a good boyle who loves to %s and pees %s' % (name, purpose, urine)
 
@@ -32,12 +46,12 @@ def basic_get():
     return json_str
 
 
-@app.route('/doyle-api/hello')
+@bottle.route('/doyle-api/hello')
 def hello():
     doyle_says = 'hello'
     return json.dumps(doyle_says)
 
 
-run(app, host='localhost', port=8080)
+bottle.run(host='localhost', port=8080, debug=True)
 
 
