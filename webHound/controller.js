@@ -21,10 +21,11 @@ function($scope, $http) {
     $scope.returno = function() {
         return;
     };
+
     $scope.getTempData = function() {
         // TODO get user input tstart/tstop/device
         tstart = '2019-05-01';
-        tstop = '2019-05-12';
+        tstop = '2019-05-13';
         device = 'Pecan'
         // build url
         url = baseSensorUrl + '/getTemp';
