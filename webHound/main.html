@@ -7,22 +7,32 @@
 
         <!-- Include the AngularJS library -->
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
+        <!-- Include the plotly library -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
 
-    <body ng-app="pyzzaApp">
+    <body ng-app="pyzzaApp" ng-controller="pyzzaController">
 
-    <div class="header"></div>
+    <div class="header">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown button
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2" ng-repeat="c in categories">
+                <button class="dropdown-item" type="button">{{c}}</button>
 
-
-    <div class="main" ng-controller="pyzzaController">
-        <div class="container" ng-repeat="c in categories">
-            <button>{{c}}</button>
+            </div>
         </div>
+    </div>
+
+
+    <div class="main">
+        <div id="temperaturePlot"></div>
     </div>
 
 
         <!-- Controllers -->
         <script src="controller.js"></script>
-
     </body>
 </html>

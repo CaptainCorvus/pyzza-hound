@@ -1,9 +1,29 @@
 import json
 import os
 import numpy as np
+import datetime
 import bottle
+import bokeh.plotting as bp
+from bokeh.resources import CDN
+from bokeh.embed import file_html
+import SensorDB
 
-#app = bottle.Bottle()
+# create database interface
+di = SensorDB.DataInterface()
+
+@bottle.get('/test-plot')
+def get_testplot():
+    di = SensorDB.DataInterface()
+    tstop = datetime.datetime.now()
+    tstart = (tstop - datetime.timedelta(days=10))
+    times, tempc, tempf = di.get_temp_readings(tstart, tstop, 'Pecan')
+
+    bp.output_file('test.html')
+    p = bp.figure(title='Tempf vs Time', x_axis_type='datetime',
+                  plot_height=500, plot_width=800,
+                  x_axis_label='time', y_axis_label='Temp [F]')
+    p.scatter(times, tempf, legend='Temperature', line_width=2)
+
 
 
 @bottle.route('/<path:path>')
@@ -18,6 +38,26 @@ def serve_static_files(path):
 def testing(test):
     t = test
     return json.dumps(t)
+
+@bottle.get('/sensor-api/getTemp')
+def get_temp():
+    tstart = bottle.request.query.tstart
+    tstop  = bottle.request.query.tstop
+    device = bottle.request.query.device
+
+    tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d')
+    tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d')
+
+    # get the data from the database
+    time, tempc, tempf = di.get_temp_readings(tstart, tstop, device)
+
+    return_dict = {
+        'time': time,
+        'tempc': tempc,
+        'tempf': tempf
+    }
+    json_str = json.dumps(return_dict)
+    return json_str
 
 
 @bottle.route('/doyle-api/basic-plot')
