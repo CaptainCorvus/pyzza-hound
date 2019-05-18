@@ -45,8 +45,8 @@ def get_temp():
     tstop  = bottle.request.query.tstop
     device = bottle.request.query.device
 
-    tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d')
-    tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d')
+    tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')
+    tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
 
     # get the data from the database
     time, tempc, tempf = di.get_temp_readings(tstart, tstop, device)

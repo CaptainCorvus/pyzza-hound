@@ -17,16 +17,25 @@ function($scope, $http) {
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
     $scope.tempData = null;
     $scope.tempTraces = [];
+    $scope.currentTemp = null;
 
     $scope.returno = function() {
         return;
     };
 
+    $scope.getNow = function() {
+        var time = new moment().format('YYYY-MM-DD HH:mm:ss');
+        //var formatted = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDay();
+        //formatted = formatted + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+        return time;
+    };
+
     $scope.getTempData = function() {
         // TODO get user input tstart/tstop/device
-        tstart = '2019-05-01';
-        tstop = '2019-05-13';
+        tstart = '2019-05-01 00:00:00';
+        tstop = $scope.getNow();
         device = 'Pecan'
+
         // build url
         url = baseSensorUrl + '/getTemp';
         url = url + '?tstart=' + tstart;
@@ -37,13 +46,14 @@ function($scope, $http) {
         }, $scope.returno);
     };
 
-    $scope.newPlot = function() {
+    $scope.displayTemperature = function() {
         if ($scope.tempData !== null) {
-
+            len = $scope.tempData.tempf.length;
+            $scope.currentTemp = $scope.tempData.tempf[len - 1];
             var tempf = {
                 x: $scope.tempData.time,
                 y: $scope.tempData.tempf,
-                mode: 'lines',
+                mode: 'markers',
                 type: 'scatter'
             };
             $scope.tempTraces = [tempf];
