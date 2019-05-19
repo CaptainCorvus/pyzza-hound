@@ -104,16 +104,14 @@ class DataInterface:
         :param device:
         :return:
         """
-        # TODO check that TemperatureData class is correctly passed...type check datetime objects
-
+        # tstart, tstop should be datetime objects
         if not isinstance(tstart, datetime.datetime) or\
                 not isinstance(tstop, datetime.datetime):
             raise TypeError
         if device is None:
             device = DeviceInfo.DEFAULT_DEVICES['temperature']
 
-
-        # TODO tstart, tstop should be datetime objects
+        # build the query
         qry = self.session.query(TemperatureData)\
             .filter(TemperatureData.Time >= tstart)\
             .filter(TemperatureData.Time <= tstop)\
