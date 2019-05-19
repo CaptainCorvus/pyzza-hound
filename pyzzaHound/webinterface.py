@@ -3,28 +3,11 @@ import os
 import numpy as np
 import datetime
 import bottle
-import bokeh.plotting as bp
-from bokeh.resources import CDN
-from bokeh.embed import file_html
+
 import SensorDB
 
 # create database interface
 di = SensorDB.DataInterface()
-
-@bottle.get('/test-plot')
-def get_testplot():
-    di = SensorDB.DataInterface()
-    tstop = datetime.datetime.now()
-    tstart = (tstop - datetime.timedelta(days=10))
-    times, tempc, tempf = di.get_temp_readings(tstart, tstop, 'Pecan')
-
-    bp.output_file('test.html')
-    p = bp.figure(title='Tempf vs Time', x_axis_type='datetime',
-                  plot_height=500, plot_width=800,
-                  x_axis_label='time', y_axis_label='Temp [F]')
-    p.scatter(times, tempf, legend='Temperature', line_width=2)
-
-
 
 @bottle.route('/<path:path>')
 def serve_static_files(path):
