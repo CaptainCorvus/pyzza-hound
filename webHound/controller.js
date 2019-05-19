@@ -18,6 +18,7 @@ function($scope, $http) {
     $scope.tempData = null;
     $scope.tempTraces = [];
     $scope.currentTemp = null;
+    $scope.sensorTypeSelected = $scope.categories[0];
 
     $scope.returno = function() {
         return;
@@ -25,8 +26,6 @@ function($scope, $http) {
 
     $scope.getNow = function() {
         var time = new moment().format('YYYY-MM-DD HH:mm:ss');
-        //var formatted = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDay();
-        //formatted = formatted + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
         return time;
     };
 

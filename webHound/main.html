@@ -54,17 +54,19 @@
 
         <main role="main" class="container">
             <div>
-                <select>
-                <option ng-repeat="c in categories">{{ c }}</option>
+                <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
+                    <option ng-repeat="c in categories">{{ c }}</option>
                 </select>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="getTempData()">load</button>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="displayTemperature()">plot</button>
             </div>
-            <div class="starter-template">
-                <div id="temperaturePlot"></div>
-                <div>
-                    <h1>Current Temperature</h1>
-                    <b>{{currentTemp}}</b>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-6 col-sm-9" id="temperaturePlot"></div>
+                    <div class="col-lg-3 col-md-6 col-sm-1" id="currentTemp">
+                        <p>Current {{sensorTypeSelected}}</p>
+                        <b>{{currentTemp}}</b>
+                    </div>
                 </div>
             </div>
 
