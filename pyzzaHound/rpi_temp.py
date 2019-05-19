@@ -1,11 +1,17 @@
 import os
-import sys
+import socket
 import time as t
 import glob
 import datetime as dt
 import sys
 
-import SensorDB as sdb
+import SensorDB
+
+# get the device name
+DEVICE = socket.gethostname()
+
+# create database interface
+di = SensorDB.DataInterface()
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
@@ -86,11 +92,11 @@ while True:
         'Time': time,
         'Temp_c': temp_c,
         'Temp_f': temp_f,
-        'Device': 'Pecan'
+        'Device': DEVICE
     }
 
     # write valid readings to the database
-    sdb.add_temperature_reading(reading)
+    di.add_temperature_reading(reading)
     if "-p" in sys.argv:
         print("\ntime: {0}".format(time))
         print('{0} C'.format(temp_c))

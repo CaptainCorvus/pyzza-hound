@@ -8,9 +8,8 @@ TEST_ENTRY = {
 
 data_interface = SensorDB.DataInterface()
 
-# s.add_to_testing(TEST_ENTRY)
 tstop = datetime.datetime.now()
-tstart = (tstop - datetime.timedelta(hours=36))
+tstart = (tstop - datetime.timedelta(stdays=10))
 times, tempc, tempf = data_interface.get_temp_readings(tstart, tstop, 'Pecan')
 
 bp.output_file('test.html')
