@@ -1,4 +1,5 @@
-from DeviceInfo import DEVICES
+import DeviceInfo
+import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, query
@@ -13,6 +14,7 @@ engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
 Base   = declarative_base()
 # create session
 Session = sessionmaker(bind=engine)
+
 
 class Devices(Base):
     __tablename__ = 'devices'
@@ -48,16 +50,17 @@ class DataInterface:
 
     def _parse_data(self, data):
         """
-        create two lists from queried data: one with timeseries, other with data
+        create three lists from queried data: one with timeseries,
+        the other two with the temp in C/F
         :param data: a list of dicts
-        :return: timeseries, data
+        :return: timeseries <datetime>, tempc <list>, tempf <list>
         """
         times = list()
         tempc = list()
         tempf = list()
         for row in data:
             curr_row = vars(row)
-            times.append(curr_row['Time']) #.strftime('%Y-%m-%d %H:%M:%S'))
+            times.append(curr_row['Time'].strftime('%Y-%m-%d %H:%M:%S'))
             tempc.append(curr_row['Temp_c'])
             tempf.append(curr_row['Temp_f'])
 
@@ -96,23 +99,27 @@ class DataInterface:
     def get_temp_readings(self, tstart, tstop, device=None):
         """
 
-        :param table:
-        :type table:
         :param tstart:
         :param tstop:
         :param device:
         :return:
         """
-        # TODO check that TemperatureData class is correctly passed...type check datetime objects
+        # tstart, tstop should be datetime objects
+        if not isinstance(tstart, datetime.datetime) or\
+                not isinstance(tstop, datetime.datetime):
+            raise TypeError
+        if device is None:
+            device = DeviceInfo.DEFAULT_DEVICES['temperature']
 
-
-        # TODO tstart, tstop should be datetime objects
+        # build the query
         qry = self.session.query(TemperatureData)\
             .filter(TemperatureData.Time >= tstart)\
             .filter(TemperatureData.Time <= tstop)\
             .filter(TemperatureData.Device == device).all()
         time, tempc, tempf = self._parse_data(qry)
         return time, tempc, tempf
+
+
 
     def add_to_testing(self, test_entry):
         if not isinstance(test_entry, dict):

@@ -1,11 +1,13 @@
 import os
-import sys
+import socket
 import time as t
 import glob
 import datetime as dt
 import sys
 
 import SensorDB as sdb
+
+DEVICE = socket.gethostname()
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
@@ -86,7 +88,7 @@ while True:
         'Time': time,
         'Temp_c': temp_c,
         'Temp_f': temp_f,
-        'Device': 'Pecan'
+        'Device': DEVICE
     }
 
     # write valid readings to the database
