@@ -54,19 +54,26 @@
 
         <main role="main" class="container">
             <div>
-                <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
-                    <option ng-repeat="c in categories">{{ c }}</option>
-                </select>
+                <div>
+                    <i>Select sensor type</i>
+                    <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
+                        <option ng-repeat="c in categories">{{ c }}</option>
+                    </select>
+                </div>
+                <div>
+                    <i>quick time range:</i>
+                    <select name="timerangeSelect" id="timerangeSelect" ng-model="timerangeSelected">
+                        <option ng-repeat="range in quickTimeRanges track by range.value">{{ range.name }}</option>
+                    </select>
+                </div>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="getTempData()">load</button>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="displayTemperature()">plot</button>
             </div>
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-9 col-md-6 col-sm-9" id="temperaturePlot"></div>
-                    <div class="col-lg-9 col-md-6 col-sm-9" id="currentTemp">
-                        <p>Current {{sensorTypeSelected}}</p>
-                        <b>{{currentTemp}}</b>
-                    </div>
+                <div class="col-md-10" id="temperaturePlot"></div>
+                <div class="col-md-2" id="currentTemp">
+                    <b>Current {{sensorTypeSelected}}</b>
+                    <b>{{currentTemp}}</b>
                 </div>
             </div>
 
