@@ -62,9 +62,7 @@
                 </div>
                 <div>
                     <i>quick time range:</i>
-                    <select name="timerangeSelect" id="timerangeSelect" ng-model="timerangeSelected">
-                        <option ng-repeat="range in quickTimeRanges track by range.value">{{ range.name }}</option>
-                    </select>
+                    <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
                 </div>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="getTempData()">load</button>
                 <button class="btn btn-outline-success my-2 my-sm-0" ng-click="displayTemperature()">plot</button>
