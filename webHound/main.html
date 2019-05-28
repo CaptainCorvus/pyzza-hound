@@ -53,26 +53,43 @@
         </nav>
 
         <main role="main" class="container">
-            <div>
-                <div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2" id="senorSelect">
                     <i>Select sensor type</i>
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
                         <option ng-repeat="c in categories">{{ c }}</option>
                     </select>
                 </div>
-                <div>
+                <div class="col-lg-2 col-md-2">
                     <i>quick time range:</i>
                     <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
                 </div>
-                <button class="btn btn-outline-success my-2 my-sm-0" ng-click="getTempData()">load</button>
-                <button class="btn btn-outline-success my-2 my-sm-0" ng-click="displayTemperature()">plot</button>
-            </div>
-            <div class="container">
-                <div class="col-md-10" id="temperaturePlot"></div>
-                <div class="col-md-2" id="currentTemp">
-                    <b>Current {{sensorTypeSelected}}</b>
-                    <b>{{currentTemp}}</b>
+                <!-- <div class="col-lg-2 col-md-2">
+                    <i>Start</i>
+                    <input type="datetime-local" id="inputStart" name="input" ng-model="inputDate.start"
+                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
                 </div>
+                <div class="col-lg-2 col-md-2">
+                    <i>Start</i>
+                    <input type="datetime-local" id="inputStop" name="input" ng-model="inputDate.stop"
+                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
+                </div> -->
+
+                <button class="col-lg-2 col-md-2" ng-click="getTempData()">load</button>
+                <button class="col-lg-2 col-md-2" ng-click="displayTemperature()">plot</button>
+            </div>
+
+            <div class="container">
+
+                <div id="temperaturePlot"></div>
+
+                <div class="row">
+                    <div class="col-md-2" id="currentTemp">
+                        <i>Current {{sensorTypeSelected}}</i>
+                        <b>{{currentTemp}}</b>
+                    </div>
+                </div>
+
             </div>
 
         </main><!-- /.container -->

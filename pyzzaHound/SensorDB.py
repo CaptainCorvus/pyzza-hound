@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, query
 from sqlalchemy import Column, Integer, String, DateTime, Float, VARCHAR
+import numpy as np
 
 
 """
@@ -63,7 +64,9 @@ class DataInterface:
             times.append(curr_row['Time'].strftime('%Y-%m-%d %H:%M:%S'))
             tempc.append(curr_row['Temp_c'])
             tempf.append(curr_row['Temp_f'])
-
+        times = np.array(times)
+        tempc = np.array(tempc)
+        tempf = np.array(tempf)
         return times, tempc, tempf
 
     def add_device(self, new_device):

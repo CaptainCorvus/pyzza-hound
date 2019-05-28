@@ -19,6 +19,10 @@ function($scope, $http) {
     $scope.currentTemp = null;
     $scope.sensorTypeSelected = $scope.categories[0];
     $scope.firstLoad = true;
+    $scope.inputDate = {
+        start: null,
+        stop: null
+    };
     $scope.quickTimeRanges = [
         {
             name: '24 hours',
