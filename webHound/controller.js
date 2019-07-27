@@ -14,6 +14,8 @@ function($scope, $http) {
 
     $scope.device = 'pecan';
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
+    $scope.tempFields = ['Device', 'Current temp', 'Min Temp', 'Max Temp', 'Mean Temp'];
+    $scope.deviceList = [];
     $scope.tempData = null;
     $scope.tempTraces = [];
     $scope.currentTemp = null;
@@ -80,6 +82,7 @@ function($scope, $http) {
         $http.get(url).then(function(response) {
             response.data;
             $scope.tempData = response.data;
+            $scope.deviceList.push($scope.tempData);
         }, $scope.returno);
     };
 

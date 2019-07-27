@@ -89,6 +89,26 @@
                         <b>{{currentTemp}}</b>
                     </div>
                 </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Device</th>
+                            <th>Current Temperature</th>
+                            <th>Min temp @ time</th>
+                            <th>Max temp @ time</th>
+                            <th>Mean temp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="d in deviceList">
+                            <td>{{d.name}}</td>
+                            <td>{{d.currentTemp}}</td>
+                            <td>{{d.min}} @ {{d.tmin}}</td>
+                            <td>{{d.max}} @ {{d.tmax}}</td>
+                            <td>{{d.mean.toFixed(2)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
             </div>
 

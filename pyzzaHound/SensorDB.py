@@ -64,9 +64,7 @@ class DataInterface:
             times.append(curr_row['Time'].strftime('%Y-%m-%d %H:%M:%S'))
             tempc.append(curr_row['Temp_c'])
             tempf.append(curr_row['Temp_f'])
-        times = np.array(times)
-        tempc = np.array(tempc)
-        tempf = np.array(tempf)
+
         return times, tempc, tempf
 
     def add_device(self, new_device):
@@ -88,7 +86,7 @@ class DataInterface:
 
     def add_temperature_reading(self, new_reading):
         """
-        TODO
+        Add a temperature reading to the mysqldb
         :param new_reading:
         :return:
         """
@@ -98,6 +96,20 @@ class DataInterface:
         entry = TemperatureData(**new_reading)
         self.session.add(entry)
         self.session.commit()
+
+    def _get_temp_stats(self, time, tempc, tempf):
+        id_max = np.argmax(tempf)
+        id_min = np.argmin(tempf)
+        mean   = np.mean(tempf)
+        std    = np.std(tempf)
+
+        max    = tempf[id_max]
+        min    = tempf[id_min]
+        tmax   = time[id_max]
+        tmin   = time[id_min]
+
+        return min, max, tmin, tmax, mean, std
+
 
     def get_temp_readings(self, tstart, tstop, device=None):
         """
@@ -120,8 +132,12 @@ class DataInterface:
             .filter(TemperatureData.Time <= tstop)\
             .filter(TemperatureData.Device == device).all()
         time, tempc, tempf = self._parse_data(qry)
-        return time, tempc, tempf
-
+        min, max, tmin, tmax, mean, std = self._get_temp_stats(
+            np.array(time),
+            np.array(tempc),
+            np.array(tempf)
+        )
+        return device, time, tempc, tempf, min, max, tmin, tmax, mean, std
 
 
     def add_to_testing(self, test_entry):

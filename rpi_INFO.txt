@@ -1,7 +1,9 @@
 raspberry pi 2:
 pi@192.168.0.219
 192.168.0.219	pecan
+ras********2
 
 raspberry pi 3:
 pi@192.168.0.119
 192.168.0.119	pumpkin
+ras********3

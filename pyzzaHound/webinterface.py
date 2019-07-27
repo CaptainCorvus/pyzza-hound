@@ -38,12 +38,19 @@ def get_temp():
     tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
 
     # get the data from the database
-    time, tempc, tempf = di.get_temp_readings(tstart, tstop, device)
+    device, time, tempc, tempf, min, max, tmin, tmax, mean, std = di.get_temp_readings(tstart, tstop, device)
 
     return_dict = {
+        'name': device,
         'time': time,
         'tempc': tempc,
-        'tempf': tempf
+        'tempf': tempf,
+        'min': min,
+        'max': max,
+        'tmin': tmin,
+        'tmax': tmax,
+        'mean': mean,
+        'std': std
     }
     json_str = json.dumps(return_dict)
     return json_str
