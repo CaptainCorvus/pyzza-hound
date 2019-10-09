@@ -23,12 +23,37 @@
     </head>
 
     <body ng-app="pyzzaApp" ng-controller="pyzzaController" >
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <nav id="header" class="navbar fixed-top">
             <a class="navbar-brand">Sensor Hound</a>
+            <div class="row">
+                <div class="col-lg-2 col-md-2" id="sensorSelect">
+                    <i>Select sensor type</i>
+                    <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
+                        <option ng-repeat="c in categories">{{ c }}</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <i>quick time range:</i>
+                    <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
+                </div>
+                <!-- <div class="col-lg-2 col-md-2">
+                    <i>Start</i>
+                    <input type="datetime-local" id="inputStart" name="input" ng-model="inputDate.start"
+                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
+                </div>
+                <div class="col-lg-2 col-md-2">
+                    <i>Start</i>
+                    <input type="datetime-local" id="inputStop" name="input" ng-model="inputDate.stop"
+                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
+                </div> -->
+
+                <button class="col-lg-2 col-md-2" ng-click="getTempData()">load</button>
+                <button class="col-lg-2 col-md-2" ng-click="displayTemperature()">plot</button>
+            </div>
+            <!-- navbar-expand-md navbar-light bg-light
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
@@ -50,10 +75,11 @@
                     </li>
                 </ul>
             </div>
+            -->
         </nav>
 
         <main role="main" class="container">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-2 col-md-2" id="senorSelect">
                     <i>Select sensor type</i>
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
@@ -64,7 +90,7 @@
                     <i>quick time range:</i>
                     <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
                 </div>
-                <!-- <div class="col-lg-2 col-md-2">
+                <div class="col-lg-2 col-md-2">
                     <i>Start</i>
                     <input type="datetime-local" id="inputStart" name="input" ng-model="inputDate.start"
                            placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">

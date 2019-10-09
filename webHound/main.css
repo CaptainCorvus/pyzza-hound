@@ -13,3 +13,9 @@ button {
 input {
     border-radius: 10px;
 }
+
+#header {
+    overflow: visible;
+    background: Grey;
+    border-bottom: 6px solid #cf2036
+}
