@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, query
 from sqlalchemy import Column, Integer, String, DateTime, Float, VARCHAR
+import numpy as np
 
 
 """
@@ -12,6 +13,7 @@ Standard interface for connecting to the Sensor database
 
 engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
 Base   = declarative_base()
+
 # create session
 Session = sessionmaker(bind=engine)
 
@@ -85,7 +87,7 @@ class DataInterface:
 
     def add_temperature_reading(self, new_reading):
         """
-        TODO
+        Add a temperature reading to the mysqldb
         :param new_reading:
         :return:
         """
@@ -95,6 +97,20 @@ class DataInterface:
         entry = TemperatureData(**new_reading)
         self.session.add(entry)
         self.session.commit()
+
+    def _get_temp_stats(self, time, tempc, tempf):
+        id_max = np.argmax(tempf)
+        id_min = np.argmin(tempf)
+        mean   = np.mean(tempf)
+        std    = np.std(tempf)
+
+        max    = tempf[id_max]
+        min    = tempf[id_min]
+        tmax   = time[id_max]
+        tmin   = time[id_min]
+
+        return min, max, tmin, tmax, mean, std
+
 
     def get_temp_readings(self, tstart, tstop, device=None):
         """
@@ -117,8 +133,12 @@ class DataInterface:
             .filter(TemperatureData.Time <= tstop)\
             .filter(TemperatureData.Device == device).all()
         time, tempc, tempf = self._parse_data(qry)
-        return time, tempc, tempf
-
+        min, max, tmin, tmax, mean, std = self._get_temp_stats(
+            np.array(time),
+            np.array(tempc),
+            np.array(tempf)
+        )
+        return device, time, tempc, tempf, min, max, tmin, tmax, mean, std
 
 
     def add_to_testing(self, test_entry):
