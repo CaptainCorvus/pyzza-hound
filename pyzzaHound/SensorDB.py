@@ -13,6 +13,7 @@ Standard interface for connecting to the Sensor database
 
 engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
 Base   = declarative_base()
+
 # create session
 Session = sessionmaker(bind=engine)
 
