@@ -1,9 +1,8 @@
 raspberry pi 2:
-pi@192.168.0.219
+pi@192.168.0.219 or pi@pecan
 192.168.0.219	pecan
-ras********2
 
 raspberry pi 3:
-pi@192.168.0.119
+pi@192.168.0.119 or pi@pumpkin
 192.168.0.119	pumpkin
-ras********3
+
