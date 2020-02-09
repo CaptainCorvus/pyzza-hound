@@ -31,26 +31,21 @@ def get_temp():
 
     tstart = bottle.request.query.tstart
     tstop  = bottle.request.query.tstop
-    device = bottle.request.query.device
+    device = bottle.request.query.device.lower()
 
     # format tstart, tstop
     tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')
     tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
 
     # get the data from the database
-    device, time, tempc, tempf, min, max, tmin, tmax, mean, std = di.get_temp_readings(tstart, tstop, device)
+    device, time, tempc, tempf, stats = di.get_temp_readings(tstart, tstop, device)
 
     return_dict = {
         'name': device,
         'time': time,
         'tempc': tempc,
         'tempf': tempf,
-        'min': min,
-        'max': max,
-        'tmin': tmin,
-        'tmax': tmax,
-        'mean': mean,
-        'std': std
+        'stats': stats
     }
     json_str = json.dumps(return_dict)
     return json_str

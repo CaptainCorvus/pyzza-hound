@@ -26,14 +26,18 @@
         <nav id="header" class="navbar fixed-top">
             <a class="navbar-brand">Sensor Hound</a>
             <div class="row">
-                <div class="col-lg-2 col-md-2" id="sensorSelect">
-                    <i>Select sensor type</i>
+                <div class="col-lg-2 col-md-2" id="deviceDropdown">
+                    <i>Source</i>
+                    <select name="deviceSelect" ng-model="deviceSelected" ng-options="d for d in deviceList"></select>
+                </div>
+                <div class="col-lg-2 col-md-2" id="sensorsDropdown">
+                    <i>Sensor</i>
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
                         <option ng-repeat="c in categories">{{ c }}</option>
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-2">
-                    <i>quick time range:</i>
+                    <i>Time range:</i>
                     <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
                 </div>
                 <!-- <div class="col-lg-2 col-md-2">
@@ -79,31 +83,6 @@
         </nav>
 
         <main role="main" class="container">
-            <!-- <div class="row">
-                <div class="col-lg-2 col-md-2" id="senorSelect">
-                    <i>Select sensor type</i>
-                    <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
-                        <option ng-repeat="c in categories">{{ c }}</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-2">
-                    <i>quick time range:</i>
-                    <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
-                </div>
-                <div class="col-lg-2 col-md-2">
-                    <i>Start</i>
-                    <input type="datetime-local" id="inputStart" name="input" ng-model="inputDate.start"
-                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
-                </div>
-                <div class="col-lg-2 col-md-2">
-                    <i>Start</i>
-                    <input type="datetime-local" id="inputStop" name="input" ng-model="inputDate.stop"
-                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
-                </div> -->
-
-                <button class="col-lg-2 col-md-2" ng-click="getTempData()">load</button>
-                <button class="col-lg-2 col-md-2" ng-click="displayTemperature()">plot</button>
-            </div>
 
             <div class="container">
 
@@ -120,18 +99,18 @@
                         <tr>
                             <th>Device</th>
                             <th>Current Temperature</th>
-                            <th>Min temp @ time</th>
-                            <th>Max temp @ time</th>
-                            <th>Mean temp</th>
+                            <th>Min temp</th>
+                            <th>Max temp</th>
+                            <th>Mean</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="d in deviceList">
-                            <td>{{d.name}}</td>
-                            <td>{{d.currentTemp}}</td>
-                            <td>{{d.min}} @ {{d.tmin}}</td>
-                            <td>{{d.max}} @ {{d.tmax}}</td>
-                            <td>{{d.mean.toFixed(2)}}</td>
+                        <tr>
+                            <td>{{tempData.name}}</td>
+                            <td>{{currentTemp}}</td>
+                            <td>{{tempData.stats.min}} @ {{tempData.stats.tmin}}</td>
+                            <td>{{tempData.stats.max}} @ {{tempData.stats.tmax}}</td>
+                            <td>{{tempData.stats.mean.toFixed(2)}}</td>
                         </tr>
                     </tbody>
                 </table>

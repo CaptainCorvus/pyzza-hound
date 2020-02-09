@@ -99,17 +99,34 @@ class DataInterface:
         self.session.commit()
 
     def _get_temp_stats(self, time, tempc, tempf):
+        """
+        Return a dict with stats for provided data
+
+        :param time:
+        :param tempc: temperature data in Celsius
+        :type tempc: numpy.array
+        :param tempf: temperature data in Fehrenheit
+        :type tempf: numpy.array
+
+        :return: stats of data
+        """
+        if tempf is None or len(tempf) == 0:
+            return
+
+        stats = dict()
+
+        # get indices of min/max
         id_max = np.argmax(tempf)
         id_min = np.argmin(tempf)
-        mean   = np.mean(tempf)
-        std    = np.std(tempf)
 
-        max    = tempf[id_max]
-        min    = tempf[id_min]
-        tmax   = time[id_max]
-        tmin   = time[id_min]
+        stats['mean']   = np.mean(tempf)
+        stats['std']    = np.std(tempf)
+        stats['max']    = tempf[id_max]
+        stats['min']    = tempf[id_min]
+        stats['tmax']   = time[id_max]
+        stats['tmin']   = time[id_min]
 
-        return min, max, tmin, tmax, mean, std
+        return stats
 
 
     def get_temp_readings(self, tstart, tstop, device=None):
@@ -133,12 +150,16 @@ class DataInterface:
             .filter(TemperatureData.Time <= tstop)\
             .filter(TemperatureData.Device == device).all()
         time, tempc, tempf = self._parse_data(qry)
-        min, max, tmin, tmax, mean, std = self._get_temp_stats(
+
+
+
+        stats = self._get_temp_stats(
             np.array(time),
             np.array(tempc),
             np.array(tempf)
         )
-        return device, time, tempc, tempf, min, max, tmin, tmax, mean, std
+
+        return device, time, tempc, tempf, stats
 
 
     def add_to_testing(self, test_entry):

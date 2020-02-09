@@ -15,7 +15,8 @@ function($scope, $http) {
     $scope.device = 'pecan';
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
     $scope.tempFields = ['Device', 'Current temp', 'Min Temp', 'Max Temp', 'Mean Temp'];
-    $scope.deviceList = [];
+    $scope.deviceList = ['Pecan', 'Pumpkin', 'Peach'];
+    $scope.deviceSelected = $scope.deviceList[0];
     $scope.tempData = null;
     $scope.tempTraces = [];
     $scope.currentTemp = null;
@@ -78,19 +79,24 @@ function($scope, $http) {
         url = baseSensorUrl + '/getTemp';
         url = url + '?tstart=' + $scope.tstart.format('YYYY-MM-DD HH:mm:ss');
         url = url + '&tstop=' + $scope.tstop.format('YYYY-MM-DD HH:mm:ss');
-        url = url + '&device=' + device;
+        url = url + '&device=' + $scope.deviceSelected;
+
+        data = null;
+
         $http.get(url).then(function(response) {
-            response.data;
             $scope.tempData = response.data;
-            $scope.deviceList.push($scope.tempData);
+            data = response.data;
+            len = $scope.tempData.tempf;
+            $scope.currentTemp = $scope.tempData.tempf[len -1]
         }, $scope.returno);
+        return data;
     };
 
     $scope.displayTemperature = function() {
         $scope.getTempData();
         if ($scope.tempData !== null) {
             len = $scope.tempData.tempf.length;
-            $scope.currentTemp = $scope.tempData.tempf[len - 1];
+            // $scope.currentTemp = $scope.tempData.tempf[len - 1];
             var tempf = {
                 x: $scope.tempData.time,
                 y: $scope.tempData.tempf,
