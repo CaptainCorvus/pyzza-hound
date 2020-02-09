@@ -53,6 +53,10 @@ def get_temp():
 
 @bottle.route('/doyle-api/basic-plot')
 def basic_plot():
+    """
+    return a json string for testing a basic plot
+    :return:
+    """
     x = np.arange(0, 10, .1)
     y = np.random.random(100)
 
