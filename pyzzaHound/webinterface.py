@@ -7,7 +7,7 @@ import bottle
 import SensorDB
 
 # create database interface
-di = SensorDB.DataInterface()
+# di = SensorDB.DataInterface()
 
 @bottle.route('/<path:path>')
 def serve_static_files(path):
@@ -22,22 +22,30 @@ def testing(test):
     t = test
     return json.dumps(t)
 
+
 @bottle.get('/sensor-api/getTemp')
 def get_temp():
+
+    # create database interface
+    di = SensorDB.DataInterface()
+
     tstart = bottle.request.query.tstart
     tstop  = bottle.request.query.tstop
-    device = bottle.request.query.device
+    device = bottle.request.query.device.lower()
 
+    # format tstart, tstop
     tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')
     tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
 
     # get the data from the database
-    time, tempc, tempf = di.get_temp_readings(tstart, tstop, device)
+    device, time, tempc, tempf, stats = di.get_temp_readings(tstart, tstop, device)
 
     return_dict = {
+        'name': device,
         'time': time,
         'tempc': tempc,
-        'tempf': tempf
+        'tempf': tempf,
+        'stats': stats
     }
     json_str = json.dumps(return_dict)
     return json_str
@@ -45,6 +53,10 @@ def get_temp():
 
 @bottle.route('/doyle-api/basic-plot')
 def basic_plot():
+    """
+    return a json string for testing a basic plot
+    :return:
+    """
     x = np.arange(0, 10, .1)
     y = np.random.random(100)
 
