@@ -33,7 +33,7 @@
                 <div class="col-lg-2 col-md-2" id="sensorsDropdown">
                     <i>Sensor</i>
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
-                        <option ng-repeat="c in categories">{{ c }}</option>
+                        <option ng-repeat="c in categories">{{c}}</option>
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-2">
@@ -50,9 +50,10 @@
                     <input type="datetime-local" id="inputStop" name="input" ng-model="inputDate.stop"
                            placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
                 </div> -->
-
-                <button class="col-lg-2 col-md-2" ng-click="getTempData()">load</button>
-                <button class="col-lg-2 col-md-2" ng-click="displayTemperature()">plot</button>
+                <div class="col-lg-4 col-md-4">
+                    <button type="button" class="btn btn-light" ng-click="getTempData()">load</button>
+                    <button type="button" class="btn btn-light" ng-click="displayTemperature()">plot</button>
+                </div>
             </div>
             <!-- navbar-expand-md navbar-light bg-light
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,11 +91,10 @@
 
                 <div class="row">
                     <div class="col-md-2" id="currentTemp">
-                        <i>Current {{sensorTypeSelected}}</i>
-                        <b>{{currentTemp}}</b>
+                        <i>Current temperature: {{currentTemp}}</i>
                     </div>
                 </div>
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Device</th>
