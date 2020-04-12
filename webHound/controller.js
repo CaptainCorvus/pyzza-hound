@@ -86,8 +86,8 @@ function($scope, $http) {
         $http.get(url).then(function(response) {
             $scope.tempData = response.data;
             data = response.data;
-            len = $scope.tempData.tempf;
-            $scope.currentTemp = $scope.tempData.tempf[len -1]
+            len = $scope.tempData.tempf.length;
+            $scope.currentTemp = $scope.tempData.tempf[len - 1]
         }, $scope.returno);
         return data;
     };
@@ -106,29 +106,9 @@ function($scope, $http) {
             $scope.tempTraces = [tempf];
 
         }
-//        else {
-//            var trace1 = {
-//                x: [1, 2, 3, 4],
-//                y: [10, 15, 13, 17],
-//                mode: 'markers',
-//                type: 'scatter'
-//            };
-//
-//            var trace2 = {
-//              x: [2, 3, 4, 5],
-//              y: [16, 5, 11, 9],
-//              mode: 'lines',
-//              type: 'scatter'
-//            };
-//            $scope.tempTraces = [trace1, trace2];
-
-//        }
         Plotly.newPlot('temperaturePlot', $scope.tempTraces);
-    }
+    };
 
-    // initial page load, get the temperature data and display it
-//    $scope.getTempData();
-//    $scope.displayTemperature();
 }
 
 ]);

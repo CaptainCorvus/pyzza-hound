@@ -1,11 +1,13 @@
 name: doyle
 channels:
         - conda-forge
+        - anaconda-fusion
+        - anaconda
+        - defaults
 dependencies:
         - numpy
         - pandas
         - bottle
         - matplotlib
-        - json
         - sqlalchemy
         - mysqlclient
