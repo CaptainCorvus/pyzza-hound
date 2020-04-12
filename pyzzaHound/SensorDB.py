@@ -162,6 +162,31 @@ class DataInterface:
         return device, time, tempc, tempf, stats
 
 
+    def get_last_temp_reading(self, device='peach'):
+        """
+        Get the last temperature reading from database for
+        specified device.
+
+        :param device: name of device to query in database
+        :type device: str
+        :return: data
+        :rtype: dict
+        """
+
+        qry = self.session.query(TemperatureData)\
+            .filter(TemperatureData.Device == device)\
+            .order_by(TemperatureData.id.desc()).first()
+
+        data = {
+            'device': device,
+            'tempf': qry.Temp_f,
+            'tempc': qry.Temp_c,
+            'time': qry.Time
+        }
+
+        return data
+
+
     def add_to_testing(self, test_entry):
         if not isinstance(test_entry, dict):
             raise TypeError
@@ -170,3 +195,7 @@ class DataInterface:
         self.session.add(entry)
         self.session.commit()
 
+if __name__ == '__main__':
+    di = DataInterface()
+    data = di.get_last_temp_reading()
+    print(type(data))
