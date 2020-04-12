@@ -4,11 +4,18 @@ import time as t
 import glob
 import datetime as dt
 import sys
+import gpiozero
 
 import SensorDB
 
 # get the device name
 DEVICE = socket.gethostname()
+DISPLAY_LED = False
+
+# use leds to display temp on Peach AKA Pi4
+if DEVICE in ('peach'):
+    from leds import LEDS
+    DISPLAY_LED = True
 
 # create database interface
 di = SensorDB.DataInterface()
@@ -75,6 +82,16 @@ def parse_temperature():
 
     return is_valid, reading, dt.datetime.now()
 
+def display_temp_analog(temp):
+    # round temp, convert to int
+    temp = int(round(temp, 0))
+    for led in LEDS:
+        if temp & 1:
+            led.on()
+        else:
+            led.off()
+        temp = temp >> 1
+    
 
 while True:
     is_valid, temp_c, time = parse_temperature()
@@ -97,10 +114,16 @@ while True:
 
     # write valid readings to the database
     di.add_temperature_reading(reading)
+    if DISPLAY_LED:
+        display_temp_analog(temp_f)
+
+        # display for 10m minus 2 seconds
+        t.sleep(598)
+    
     if "-p" in sys.argv:
         print("\ntime: {0}".format(time))
         print('{0} C'.format(temp_c))
         print('{0} F'.format(temp_f))
-
+    
     break
 
