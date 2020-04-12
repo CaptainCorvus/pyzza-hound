@@ -34,8 +34,8 @@ def get_logger(name):
     """
     global __registered_loggers__
     if name not in __registered_loggers__:
-        if not os.path.isdir('log'):
-            os.mkdir('log')
+        if not os.path.isdir('./log'):
+            os.mkdir('./log')
 
         logger = logging.getLogger(name)
         logger.addHandler(_rtfh)

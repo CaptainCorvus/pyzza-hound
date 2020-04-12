@@ -9,7 +9,7 @@ import gpiozero
 import SensorDB
 import common
 
-logger = common.get_logger()
+logger = common.get_logger(__name__)
 
 
 # get the device name
@@ -18,7 +18,7 @@ DISPLAY_LED = False
 
 # use leds to display temp on Peach AKA Pi4
 if DEVICE in ('peach'):
-    logger.info('Setting on LEDs for device: {}'.format(DEVICE))
+    logger.info('Setting up LEDs for device: {}'.format(DEVICE))
     from leds import LEDS
     DISPLAY_LED = True
 
@@ -127,9 +127,9 @@ while True:
 
             display_temp_analog(temp_f)
 
-            logger.info("sleeping for 598 seconds")
-            # display for 10m minus 2 seconds
-            t.sleep(598)
+            logger.info("sleeping for 590 seconds")
+            # display for 10m minus 10 seconds
+            t.sleep(590)
 
         if "-p" in sys.argv:
             print("\ntime: {0}".format(time))
@@ -140,4 +140,5 @@ while True:
 
     except:
         logger.error("Temperature reading failed!", exc_info=True)
-
+        break
+logger.info("finished")
