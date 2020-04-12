@@ -14,13 +14,6 @@ logger = common.get_logger(__name__)
 
 # get the device name
 DEVICE = socket.gethostname()
-DISPLAY_LED = False
-
-# use leds to display temp on Peach AKA Pi4
-if DEVICE in ('peach'):
-    logger.info('Setting up LEDs for device: {}'.format(DEVICE))
-    from leds import LEDS
-    DISPLAY_LED = True
 
 # create database interface
 di = SensorDB.DataInterface()
@@ -86,17 +79,6 @@ def parse_temperature():
     reading  = float(reading.split('=')[-1].strip()) / 1e3
 
     return is_valid, reading, dt.datetime.now()
-
-def display_temp_analog(temp):
-    logger.info("Updating LEDs")
-    # round temp, convert to int
-    temp = int(round(temp, 0))
-    for led in LEDS:
-        if temp & 1:
-            led.on()
-        else:
-            led.off()
-        temp = temp >> 1
     
 
 while True:
@@ -123,14 +105,6 @@ while True:
         di.add_temperature_reading(reading)
         logger.info("valid data written to database")
 
-        if DISPLAY_LED:
-
-            display_temp_analog(temp_f)
-
-            logger.info("sleeping for 590 seconds")
-            # display for 10m minus 10 seconds
-            t.sleep(590)
-
         if "-p" in sys.argv:
             print("\ntime: {0}".format(time))
             print('{0} C'.format(temp_c))
@@ -141,4 +115,3 @@ while True:
     except:
         logger.error("Temperature reading failed!", exc_info=True)
         break
-logger.info("finished")
