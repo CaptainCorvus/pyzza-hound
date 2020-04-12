@@ -7,6 +7,10 @@ import sys
 import gpiozero
 
 import SensorDB
+import common
+
+logger = common.get_logger()
+
 
 # get the device name
 DEVICE = socket.gethostname()
@@ -14,6 +18,7 @@ DISPLAY_LED = False
 
 # use leds to display temp on Peach AKA Pi4
 if DEVICE in ('peach'):
+    logger.info('Setting on LEDs for device: {}'.format(DEVICE))
     from leds import LEDS
     DISPLAY_LED = True
 
@@ -83,6 +88,7 @@ def parse_temperature():
     return is_valid, reading, dt.datetime.now()
 
 def display_temp_analog(temp):
+    logger.info("Updating LEDs")
     # round temp, convert to int
     temp = int(round(temp, 0))
     for led in LEDS:
@@ -94,36 +100,44 @@ def display_temp_analog(temp):
     
 
 while True:
-    is_valid, temp_c, time = parse_temperature()
+    try:
+        is_valid, temp_c, time = parse_temperature()
 
-    # only operate on valid temperature readings
-    if not is_valid:
-        print("Not a valid reading")
-        t.sleep(0.2)
-        continue
+        # only operate on valid temperature readings
+        if not is_valid:
+            logger.warning("Not a valid reading: {}".format(temp_c))
+            t.sleep(0.2)
+            continue
 
-    temp_f = _convert_c_to_f(temp_c)
+        temp_f = _convert_c_to_f(temp_c)
 
-    # create dict from temperature reading
-    reading = {
-        'Time': time,
-        'Temp_c': temp_c,
-        'Temp_f': temp_f,
-        'Device': DEVICE
-    }
+        # create dict from temperature reading
+        reading = {
+            'Time': time,
+            'Temp_c': temp_c,
+            'Temp_f': temp_f,
+            'Device': DEVICE
+        }
 
-    # write valid readings to the database
-    di.add_temperature_reading(reading)
-    if DISPLAY_LED:
-        display_temp_analog(temp_f)
+        # write valid readings to the database
+        di.add_temperature_reading(reading)
+        logger.info("valid data written to database")
 
-        # display for 10m minus 2 seconds
-        t.sleep(598)
-    
-    if "-p" in sys.argv:
-        print("\ntime: {0}".format(time))
-        print('{0} C'.format(temp_c))
-        print('{0} F'.format(temp_f))
-    
-    break
+        if DISPLAY_LED:
+
+            display_temp_analog(temp_f)
+
+            logger.info("sleeping for 598 seconds")
+            # display for 10m minus 2 seconds
+            t.sleep(598)
+
+        if "-p" in sys.argv:
+            print("\ntime: {0}".format(time))
+            print('{0} C'.format(temp_c))
+            print('{0} F'.format(temp_f))
+
+        break
+
+    except:
+        logger.error("Temperature reading failed!", exc_info=True)
 

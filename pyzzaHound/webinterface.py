@@ -5,6 +5,9 @@ import datetime
 import bottle
 
 import SensorDB
+import common  # for logging
+
+logger = common.get_logger(__name__)
 
 # create database interface
 # di = SensorDB.DataInterface()
@@ -25,7 +28,6 @@ def testing(test):
 
 @bottle.get('/sensor-api/getTemp')
 def get_temp():
-
     # create database interface
     di = SensorDB.DataInterface()
 
@@ -33,6 +35,7 @@ def get_temp():
     tstop  = bottle.request.query.tstop
     device = bottle.request.query.device.lower()
 
+    logger.info("Getting temp data from {} to {}".format(tstart, tstop))
     # format tstart, tstop
     tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')
     tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
@@ -86,6 +89,5 @@ def hello():
     doyle_says = 'hello'
     return json.dumps(doyle_says)
 
-bottle.run(host='192.168.0.12', port=8080, debug=False)
-print('listening on host: 192.168.0.12')
+bottle.run(host='localhost', port=8080, debug=True)
 
