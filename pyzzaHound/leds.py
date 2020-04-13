@@ -35,7 +35,7 @@ def all_off():
         if led.is_lit:
             led.off()
 
-def set_night_mode():
+def check_night():
     
     tnow    = datetime.datetime.now()
     bedtime = datetime.time(hour=22)
@@ -100,6 +100,9 @@ def get_latest_data():
 
 
 while True:
+    # first check if it's night
+    check_night()
+
     logger.info("updating LEDs")
 
     # get the last data from the database
