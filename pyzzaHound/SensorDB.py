@@ -47,8 +47,9 @@ Testing.__table__.create(bind=engine, checkfirst=True)
 
 
 class DataInterface:
-    def __init__(self):
-        self.session = Session()
+    # def __init__(self):
+    #     # self.session = Session()
+    #     return
 
     def _parse_data(self, data):
         """
@@ -77,13 +78,15 @@ class DataInterface:
         if not isinstance(new_device, dict):
             raise TypeError
 
+        session = Session()
         entry = Devices(
             Device   = new_device['device'],
             Alias    = new_device['alias'],
             Location = new_device['location']
         )
-        self.session.add(entry)
-        self.session.commit()
+        session.add(entry)
+        session.commit()
+        session.close()
 
     def add_temperature_reading(self, new_reading):
         """
@@ -94,9 +97,13 @@ class DataInterface:
         if not isinstance(new_reading, dict):
             raise TypeError
 
+        session = Session()
+
         entry = TemperatureData(**new_reading)
-        self.session.add(entry)
-        self.session.commit()
+
+        session.add(entry)
+        session.commit()
+        session.close()
 
     def _get_temp_stats(self, time, tempc, tempf):
         """
@@ -144,11 +151,13 @@ class DataInterface:
         if device is None:
             device = DeviceInfo.DEFAULT_DEVICES['temperature']
 
+        session = Session()
         # build the query
-        qry = self.session.query(TemperatureData)\
+        qry = session.query(TemperatureData)\
             .filter(TemperatureData.Time >= tstart)\
             .filter(TemperatureData.Time <= tstop)\
             .filter(TemperatureData.Device == device).all()
+
         time, tempc, tempf = self._parse_data(qry)
 
 
@@ -158,6 +167,8 @@ class DataInterface:
             np.array(tempc),
             np.array(tempf)
         )
+
+        session.close()
 
         return device, time, tempc, tempf, stats
 
@@ -172,8 +183,9 @@ class DataInterface:
         :return: data
         :rtype: dict
         """
+        session = Session()
 
-        qry = self.session.query(TemperatureData)\
+        qry = session.query(TemperatureData)\
             .filter(TemperatureData.Device == device)\
             .order_by(TemperatureData.id.desc()).first()
 
@@ -184,6 +196,8 @@ class DataInterface:
             'time': qry.Time
         }
 
+        session.close()
+
         return data
 
 
@@ -191,11 +205,17 @@ class DataInterface:
         if not isinstance(test_entry, dict):
             raise TypeError
 
+        session = Session()
+
         entry = Testing(**test_entry)
-        self.session.add(entry)
-        self.session.commit()
+
+        session.add(entry)
+        session.commit()
+        session.close()
 
 if __name__ == '__main__':
     di = DataInterface()
     data = di.get_last_temp_reading()
+    for k, v in data.items():
+        print(k, v)
     print(type(data))

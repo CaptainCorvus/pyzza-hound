@@ -10,7 +10,7 @@ import common  # for logging
 logger = common.get_logger(__name__)
 
 # create database interface
-# di = SensorDB.DataInterface()
+di = SensorDB.DataInterface()
 
 @bottle.route('/<path:path>')
 def serve_static_files(path):
@@ -28,14 +28,11 @@ def testing(test):
 
 @bottle.get('/sensor-api/getTemp')
 def get_temp():
-    # create database interface
-    di = SensorDB.DataInterface()
 
     tstart = bottle.request.query.tstart
     tstop  = bottle.request.query.tstop
     device = bottle.request.query.device.lower()
 
-    logger.info("Getting temp data from {} to {}".format(tstart, tstop))
     # format tstart, tstop
     tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')
     tstop  = datetime.datetime.strptime(tstop, '%Y-%m-%d %H:%M:%S')
