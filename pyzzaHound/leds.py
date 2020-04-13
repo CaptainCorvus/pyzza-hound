@@ -1,5 +1,6 @@
 import socket
 import datetime
+import time
 import gpiozero
 
 import common
@@ -25,6 +26,28 @@ except Exception as e:
 """
 LEDS = (LED(26), LED(19), LED(13), LED(6),
         LED(12), LED(16), LED(20), LED(21))
+
+def all_off():
+    """
+    Set all the LEDs to off
+    """
+    for led in LEDS:
+        if led.is_lit:
+            led.off()
+
+def set_night_mode():
+    
+    tnow    = datetime.datetime.now()
+    bedtime = datetime.time(hour=22)
+    wakeup  = datetime.time(hour=6) 
+    t = tnow.hour
+    between_ten_and_midnight = t >= bedtime.hour and t <= 23
+    between_midnight_and_six = t >= 0 and t < wakeup.hour
+    
+    if between_ten_and_midnight or between_midnight_and_six:
+        logger.info("Night mode, sleeping for an hour")
+        time.sleep(3600)
+        all_off()
 
 def display_temp_analog(temp):
     """
@@ -80,10 +103,17 @@ while True:
     logger.info("updating LEDs")
 
     # get the last data from the database
-    temp, time = get_latest_data()
+    _temp, _time = get_latest_data()
+
+    logger.info("setting bits for data, time: {}, temp: {}".format(_time, _temp))
 
     # set bits 0-6 on display
+    display_temp_analog(_temp)
 
-
-
+    # set validity bit
+    display_validity_bit(_time)
+    
+    # with bits set, sleep until next reading
+    logger.info("Sleeping for 610s")
+    time.sleep(610)
 
