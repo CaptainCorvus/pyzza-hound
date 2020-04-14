@@ -36,6 +36,12 @@ def all_off():
             led.off()
 
 def check_night():
+    """
+    Checks if current time is between 10P and 6A.
+
+    :return: True if between 10P and 6A, False otherwise
+    :rtype: bool
+    """
     
     tnow    = datetime.datetime.now()
     bedtime = datetime.time(hour=22)
@@ -45,12 +51,14 @@ def check_night():
     between_midnight_and_six = t >= 0 and t < wakeup.hour
     
     if between_ten_and_midnight or between_midnight_and_six:
-        logger.info("Night mode, sleeping for an hour")
-        time.sleep(3600)
-        all_off()
+        return True
+    return False
+
 
 def display_temp_analog(temp):
     """
+    Update bits 0 through 6 on analog display to represent
+    current temperature in degrees F.
 
     :param temp: temperature in degrees [F]
     :return: None
@@ -98,10 +106,14 @@ def get_latest_data():
     return temp, time
 
 
-
 while True:
     # first check if it's night
-    check_night()
+    night = check_night()
+    if night:
+        logger.info("Night mode, sleeping for an hour")
+        all_off()
+        time.sleep(3600)
+        continue
 
     logger.info("updating LEDs")
 
