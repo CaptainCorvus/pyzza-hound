@@ -106,6 +106,31 @@ def get_latest_data():
     return temp, time
 
 
+def update_dance():
+    """
+
+    :return:
+    """
+
+    # turn off all leds to start the dance
+    all_off()
+
+    i = 0
+    while i < 2*len(LEDS):
+        idx = i % len(LEDS)
+        LEDS[idx].on()
+        time.sleep(0.5)
+
+        if LEDS[idx - 1].is_on:
+            LEDS[idx - 1].off()
+
+        i = i + 1
+
+    # turn them off again
+    all_off()
+
+
+
 while True:
     # first check if it's night
     night = check_night()
@@ -130,5 +155,8 @@ while True:
     
     # with bits set, sleep until next reading
     logger.info("Sleeping for 610s")
-    time.sleep(610)
+    time.sleep(606)
+
+    # update dance!
+    update_dance()
 
