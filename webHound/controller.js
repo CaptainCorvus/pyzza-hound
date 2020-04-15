@@ -29,25 +29,33 @@ function($scope, $http) {
     $scope.quickTimeRanges = [
         {
             name: '24 hours',
-            value: new moment().subtract(24, 'hours')
+            value: 1
         },
         {
             name: '72 hours',
-            value: new moment().subtract(72, 'hours')
+            value: 3
         },
         {
             name: '1 week',
-            value: new moment().subtract(1, 'weeks')
+            value: 7
         },
         {
             name: '1 month',
-            value: new moment().subtract(1, 'months')
+            value: 30
         },
         {
             name: '1 year',
-            value: new moment().subtract(1, 'years')
+            value: 365
         }
     ];
+
+    $scope.getTimeWindow = function(value) {
+        tstart = new moment().subtract(value, 'days');
+        tstop  = new moment();
+        return [tstart, tstop];
+
+    };
+
     $scope.timerangeSelected = $scope.quickTimeRanges[0];
     $scope.tstart = $scope.timerangeSelected.value;
     $scope.tstop = new moment();
@@ -74,11 +82,14 @@ function($scope, $http) {
     $scope.getTempData = function() {
 
         device = 'pecan'
-        $scope.tstart = $scope.timerangeSelected.value;
+        timeRange = $scope.getTimeWindow($scope.timerangeSelected.value);
+        var tstart = timeRange[0];
+        var tstop = timeRange[1];
+
         // build url
         url = baseSensorUrl + '/getTemp';
-        url = url + '?tstart=' + $scope.tstart.format('YYYY-MM-DD HH:mm:ss');
-        url = url + '&tstop=' + $scope.tstop.format('YYYY-MM-DD HH:mm:ss');
+        url = url + '?tstart=' + tstart.format('YYYY-MM-DD HH:mm:ss');
+        url = url + '&tstop=' + tstop.format('YYYY-MM-DD HH:mm:ss');
         url = url + '&device=' + $scope.deviceSelected;
 
         data = null;

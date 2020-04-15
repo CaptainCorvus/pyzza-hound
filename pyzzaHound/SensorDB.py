@@ -11,11 +11,10 @@ import numpy as np
 Standard interface for connecting to the Sensor database
 """
 
-engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
 Base   = declarative_base()
 
 # create session
-Session = sessionmaker(bind=engine)
+Session = sessionmaker()
 
 
 class Devices(Base):
@@ -41,15 +40,31 @@ class Testing(Base):
     comment = Column(VARCHAR(64))
 
 
-Devices.__table__.create(bind=engine, checkfirst=True)
-TemperatureData.__table__.create(bind=engine, checkfirst=True)
-Testing.__table__.create(bind=engine, checkfirst=True)
+# def setup_database(engine):
+#     Devices.__table__.create(bind=engine, checkfirst=True)
+#     TemperatureData.__table__.create(bind=engine, checkfirst=True)
+#     Testing.__table__.create(bind=engine, checkfirst=True)
 
 
 class DataInterface:
-    # def __init__(self):
-    #     # self.session = Session()
-    #     return
+
+    def __init__(self):
+        self.engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors')
+
+        tables = ['testing', 'device_info', 'temperature_data']
+
+        available_tables = self.engine.table_names()
+
+        for t in tables:
+            if t not in available_tables:
+                self.setup_database()
+                break
+
+    def create_session(self):
+        return Session(bind=self.engine)
+
+    def setup_database(self):
+        Base.metadata.create_all(self.engine)
 
     def _parse_data(self, data):
         """
@@ -78,7 +93,8 @@ class DataInterface:
         if not isinstance(new_device, dict):
             raise TypeError
 
-        session = Session()
+        session = self.create_session()
+
         entry = Devices(
             Device   = new_device['device'],
             Alias    = new_device['alias'],
@@ -97,7 +113,7 @@ class DataInterface:
         if not isinstance(new_reading, dict):
             raise TypeError
 
-        session = Session()
+        session = self.create_session()
 
         entry = TemperatureData(**new_reading)
 
@@ -151,7 +167,8 @@ class DataInterface:
         if device is None:
             device = DeviceInfo.DEFAULT_DEVICES['temperature']
 
-        session = Session()
+        session = self.create_session()
+
         # build the query
         qry = session.query(TemperatureData)\
             .filter(TemperatureData.Time >= tstart)\
@@ -183,7 +200,7 @@ class DataInterface:
         :return: data
         :rtype: dict
         """
-        session = Session()
+        session = self.create_session()
 
         qry = session.query(TemperatureData)\
             .filter(TemperatureData.Device == device)\
@@ -205,7 +222,7 @@ class DataInterface:
         if not isinstance(test_entry, dict):
             raise TypeError
 
-        session = Session()
+        session = self.create_session()
 
         entry = Testing(**test_entry)
 
