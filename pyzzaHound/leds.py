@@ -114,17 +114,15 @@ def update_dance():
 
     # turn off all leds to start the dance
     all_off()
+    
+    for i in range(0,2):
+        for led in LEDS:
+            led.on()
+            time.sleep(0.1)
 
-    i = 0
-    while i < 2*len(LEDS):
-        idx = i % len(LEDS)
-        LEDS[idx].on()
-        time.sleep(0.5)
-
-        if LEDS[idx - 1].is_on:
-            LEDS[idx - 1].off()
-
-        i = i + 1
+        for led in LEDS:
+            led.off()
+            time.sleep(0.1)
 
     # turn them off again
     all_off()
@@ -139,8 +137,10 @@ while True:
         all_off()
         time.sleep(3600)
         continue
+    
 
     logger.info("updating LEDs")
+    update_dance()
 
     # get the last data from the database
     _temp, _time = get_latest_data()
@@ -154,9 +154,6 @@ while True:
     display_validity_bit(_time)
     
     # with bits set, sleep until next reading
-    logger.info("Sleeping for 610s")
-    time.sleep(606)
-
-    # update dance!
-    update_dance()
+    logger.info("Sleeping for 600")
+    time.sleep(598.2)
 
