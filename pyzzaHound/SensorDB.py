@@ -49,7 +49,7 @@ class Testing(Base):
 class DataInterface:
 
     def __init__(self):
-        self.engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors', recycle_pool=3600)
+        self.engine = create_engine('mysql://trevor:doylelovespizza@pumpkin/Sensors', pool_recycle=3600)
 
         tables = ['testing', 'device_info', 'temperature_data']
 

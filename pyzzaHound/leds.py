@@ -129,6 +129,7 @@ def update_dance():
 
 
 
+prev_temp = None
 while True:
     # first check if it's night
     try:
@@ -139,12 +140,12 @@ while True:
             time.sleep(3600)
             continue
     
-
-        logger.info("updating LEDs")
-        update_dance()
-
         # get the last data from the database
         _temp, _time = get_latest_data()
+        
+        if prev_temp and prev_temp != _temp:
+            logger.info("updating LEDs")
+            update_dance()
 
         logger.info("setting bits for data, time: {}, temp: {}".format(_time, _temp))
 
@@ -154,6 +155,9 @@ while True:
         # set validity bit
         display_validity_bit(_time)
     
+        # update the previous temp
+        prev_temp = _temp
+
         # with bits set, sleep until next reading
         logger.info("Sleeping for 600")
         time.sleep(598.2)
