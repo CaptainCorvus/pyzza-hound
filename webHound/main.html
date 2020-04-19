@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
         <!-- Include the AngularJS library -->
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
         <!-- Include the plotly library -->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -35,6 +35,9 @@
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
                         <option ng-repeat="c in categories">{{c}}</option>
                     </select>
+                </div>
+                <div class="col-lg-2 col-md-2" id="deviceCheckBox">
+                    <div ng-dropdown-multiselect="" options="deviceList" selected-model="selectedDevices" checkboxes="true"></div>
                 </div>
                 <div class="col-lg-2 col-md-2">
                     <i>Time range:</i>

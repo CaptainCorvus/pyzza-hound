@@ -12,11 +12,14 @@ function($scope, $http) {
 
     var baseSensorUrl = hostname + apis.sensors;
 
+    $scope.selectedDevices = [];
+
     $scope.device = 'pecan';
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
     $scope.tempFields = ['Device', 'Current temp', 'Min Temp', 'Max Temp', 'Mean Temp'];
     $scope.deviceList = ['Pecan', 'Pumpkin', 'Peach'];
     $scope.deviceSelected = $scope.deviceList[0];
+
     $scope.tempData = null;
     $scope.tempTraces = [];
     $scope.currentTemp = null;
@@ -48,6 +51,8 @@ function($scope, $http) {
             value: 365
         }
     ];
+    $scope.timerangeSelected = $scope.quickTimeRanges[0];
+
 
     $scope.getTimeWindow = function(value) {
         tstart = new moment().subtract(value, 'days');
@@ -56,28 +61,11 @@ function($scope, $http) {
 
     };
 
-    $scope.timerangeSelected = $scope.quickTimeRanges[0];
-    $scope.tstart = $scope.timerangeSelected.value;
-    $scope.tstop = new moment();
-
-
     $scope.returno = function() {
         print("get request failed");
         return;
     };
 
-    $scope.getNow = function() {
-        var time = new moment();
-        return time;
-    };
-
-    $scope.getInitialTimeWindow = function() {
-        start = new moment().subtract(24, 'hours')
-        stop  = new moment()
-        $scope.tstart = start;
-        $scope.tstop = stop;
-
-    };
 
     $scope.getTempData = function() {
 
@@ -115,9 +103,9 @@ function($scope, $http) {
                 type: 'scatter'
             };
             $scope.tempTraces = [tempf];
-
+            Plotly.react('temperaturePlot', [tempf]);
         }
-        Plotly.newPlot('temperaturePlot', $scope.tempTraces);
+//        Plotly.relayout('temperaturePlot', []);
     };
 
 }
