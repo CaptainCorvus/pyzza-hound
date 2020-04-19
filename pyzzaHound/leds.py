@@ -131,29 +131,32 @@ def update_dance():
 
 while True:
     # first check if it's night
-    night = check_night()
-    if night:
-        logger.info("Night mode, sleeping for an hour")
-        all_off()
-        time.sleep(3600)
-        continue
+    try:
+        night = check_night()
+        if night:
+            logger.info("Night mode, sleeping for an hour")
+            all_off()
+            time.sleep(3600)
+            continue
     
 
-    logger.info("updating LEDs")
-    update_dance()
+        logger.info("updating LEDs")
+        update_dance()
 
-    # get the last data from the database
-    _temp, _time = get_latest_data()
+        # get the last data from the database
+        _temp, _time = get_latest_data()
 
-    logger.info("setting bits for data, time: {}, temp: {}".format(_time, _temp))
+        logger.info("setting bits for data, time: {}, temp: {}".format(_time, _temp))
 
-    # set bits 0-6 on display
-    display_temp_analog(_temp)
+        # set bits 0-6 on display
+        display_temp_analog(_temp)
 
-    # set validity bit
-    display_validity_bit(_time)
+        # set validity bit
+        display_validity_bit(_time)
     
-    # with bits set, sleep until next reading
-    logger.info("Sleeping for 600")
-    time.sleep(598.2)
-
+        # with bits set, sleep until next reading
+        logger.info("Sleeping for 600")
+        time.sleep(598.2)
+    except Exception as e:
+        logger.error("Error occured updating LEDs", exc_info=True)
+        raise e
