@@ -64,8 +64,6 @@ def display_temp_analog(temp):
     :return: None
     """
     logger.info("Updating LEDs")
-    # round temp, convert to int
-    temp = int(round(temp, 0))
 
     # set bits from 0 to 64, do not set 128
     for led in LEDS[:7]:
@@ -97,13 +95,19 @@ def display_validity_bit(reading_time):
 
 
 def get_latest_data():
+    """
+    return the latest temperature, rounded to an integer, and
+    its corresponding timestamp
+
+    :return: (temp <int>, time <datetime.datetime>)
+    """
     host = socket.gethostname()
     last_reading = di.get_last_temp_reading(host)
 
     temp = last_reading['tempf']
     time = last_reading['time']
 
-    return temp, time
+    return int(round(temp, 0)), time
 
 
 def update_dance():
@@ -136,6 +140,7 @@ while True:
         night = check_night()
         if night:
             logger.info("Night mode, sleeping for an hour")
+            prev_temp = None
             all_off()
             time.sleep(3600)
             continue
@@ -146,6 +151,8 @@ while True:
         if prev_temp and prev_temp != _temp:
             logger.info("updating LEDs")
             update_dance()
+        else:
+            logger.info("_temp == prev_temp, no update_dance")
 
         logger.info("setting bits for data, time: {}, temp: {}".format(_time, _temp))
 
