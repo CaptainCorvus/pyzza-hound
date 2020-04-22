@@ -1,6 +1,7 @@
-var app = angular.module('pyzzaApp', []);
+var app = angular.module('pyzzaApp', ['ngMaterial']);
 
-Plotly.newPlot('temperaturePlot', []);
+Plotly.newPlot('temperaturePlot', [{}]);
+
 app.controller('pyzzaController', ['$scope', '$http',
 function($scope, $http) {
 
@@ -17,14 +18,13 @@ function($scope, $http) {
     $scope.device = 'pecan';
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
     $scope.tempFields = ['Device', 'Current temp', 'Min Temp', 'Max Temp', 'Mean Temp'];
-    $scope.deviceList = ['Pecan', 'Pumpkin', 'Peach'];
-    $scope.deviceSelected = $scope.deviceList[0];
+    $scope.deviceList = ['Peach', 'Pumpkin', 'Pecan'];
+    $scope.deviceSelected = [$scope.deviceList[0]];
 
     $scope.tempData = null;
     $scope.tempTraces = [];
     $scope.currentTemp = null;
     $scope.sensorTypeSelected = $scope.categories[0];
-    $scope.firstLoad = true;
     $scope.inputDate = {
         start: null,
         stop: null
@@ -53,6 +53,20 @@ function($scope, $http) {
     ];
     $scope.timerangeSelected = $scope.quickTimeRanges[0];
 
+    $scope.checkboxToggle = function(item, list) {
+        var idx = list.indexOf(item);
+
+        if (idx > -1) {
+            list.splice(idx, 1);
+        }
+        else {
+            list.push(item);
+        }
+    };
+
+    $scope.exists = function(item, list) {
+        return list.indexOf(item) > -1;
+    };
 
     $scope.getTimeWindow = function(value) {
         tstart = new moment().subtract(value, 'days');
@@ -66,46 +80,53 @@ function($scope, $http) {
         return;
     };
 
+    $scope.plotSelected = function() {
+        for (i = 0; i < $scope.deviceSelected.length; i++) {
+            $scope.getTempData($scope.deviceSelected[i]);
+        }
+    };
 
-    $scope.getTempData = function() {
+    $scope.getTempData = function(device) {
 
-        device = 'pecan'
         timeRange = $scope.getTimeWindow($scope.timerangeSelected.value);
         var tstart = timeRange[0];
         var tstop = timeRange[1];
 
         // build url
-        url = baseSensorUrl + '/getTemp';
-        url = url + '?tstart=' + tstart.format('YYYY-MM-DD HH:mm:ss');
-        url = url + '&tstop=' + tstop.format('YYYY-MM-DD HH:mm:ss');
-        url = url + '&device=' + $scope.deviceSelected;
+        var url = baseSensorUrl + '/getTemp';
+        url = url + '?tstart=' + tstart.utc().format();
+        url = url + '&tstop=' + tstop.utc().format();
+        url = url + '&device=' + device;
 
-        data = null;
+        var data = null;
 
         $http.get(url).then(function(response) {
             $scope.tempData = response.data;
             data = response.data;
             len = $scope.tempData.tempf.length;
-            $scope.currentTemp = $scope.tempData.tempf[len - 1]
+            $scope.currentTemp = $scope.tempData.tempf[len - 1];
+            $scope.displayTemperature(response.data);
         }, $scope.returno);
-        return data;
+//      $scope.displayTemperature(data)
     };
 
-    $scope.displayTemperature = function() {
-        $scope.getTempData();
-        if ($scope.tempData !== null) {
-            len = $scope.tempData.tempf.length;
+    $scope.displayTemperature = function(data) {
+//        $scope.getTempData();
+
+        if (data !== null) {
+//            len = data.tempf.length;
             // $scope.currentTemp = $scope.tempData.tempf[len - 1];
             var tempf = {
-                x: $scope.tempData.time,
-                y: $scope.tempData.tempf,
+                name: data.name,
+                x: data.time,
+                y: data.tempf,
                 mode: 'markers',
                 type: 'scatter'
             };
-            $scope.tempTraces = [tempf];
-            Plotly.react('temperaturePlot', [tempf]);
+//            $scope.tempTraces = [tempf];
+//            Plotly.newPlot('temperaturePlot', [tempf]);
         }
-//        Plotly.relayout('temperaturePlot', []);
+        Plotly.react('temperaturePlot', [tempf]);
     };
 
 }
