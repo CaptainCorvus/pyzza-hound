@@ -102,14 +102,6 @@ function($scope, $http) {
         return;
     };
 
-//    $scope.plotSelected = function() {
-//        $scope.tempTraces = [];
-//        for (i = 0; i < $scope.deviceSelected.length; i++) {
-//            $scope.getTempData($scope.deviceSelected[i]);
-//        }
-////        Plotly.react('temperaturePlot', $scope.tempTraces);
-//    };
-
     $scope.getTempData = function(device) {
         Plotly.react('temperaturePlot', [], layout);
         $scope.tempTraces = [];
@@ -146,25 +138,6 @@ function($scope, $http) {
         }
     };
 
-    $scope.createTempTrace = function(data) {
-//        $scope.getTempData();
-
-        if (data !== null) {
-//            len = data.tempf.length;
-            // $scope.currentTemp = $scope.tempData.tempf[len - 1];
-            var tempf = {
-                name: data.name,
-                x: data.time,
-                y: data.tempf,
-                mode: 'markers',
-                type: 'scatter'
-            };
-//            $scope.tempTraces = [tempf];
-//            Plotly.newPlot('temperaturePlot', [tempf]);
-        }
-//        Plotly.react('temperaturePlot', [tempf]);
-        return tempf;
-    };
 
 }
 
