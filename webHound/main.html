@@ -57,8 +57,7 @@
                 </div>
 
                 <div class="col-lg-4 col-md-2">
-                    <button type="button" class="btn btn-light" ng-click="getTempData()">load</button>
-                    <button type="button" class="btn btn-light" ng-click="plotSelected()">plot</button>
+                    <button type="button" class="btn btn-light" ng-click="getTempData()">Plot</button>
                 </div>
             </div>
 
@@ -86,12 +85,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{{tempData.name}}</td>
-                            <td>{{currentTemp}}</td>
-                            <td>{{tempData.stats.min}} @ {{tempData.stats.tmin}}</td>
-                            <td>{{tempData.stats.max}} @ {{tempData.stats.tmax}}</td>
-                            <td>{{tempData.stats.mean.toFixed(2)}}</td>
+                        <tr ng-repeat="t in tempData">
+                            <td>{{t.name}}</td>
+                            <td>{{t.stats.current_temp}}</td>
+                            <td>{{t.stats.min}} @ {{t.stats.tmin}}</td>
+                            <td>{{t.stats.max}} @ {{t.stats.tmax}}</td>
+                            <td>{{t.stats.mean.toFixed(2)}}</td>
                         </tr>
                     </tbody>
                 </table>
