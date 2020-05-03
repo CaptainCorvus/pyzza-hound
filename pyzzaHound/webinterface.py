@@ -33,8 +33,8 @@ def get_temp():
     tstop  = bottle.request.query.tstop
     device = bottle.request.query.device.lower()
 
-    tstart = ' '.join(tstart.split('T'))[:-1]
-    tstop = ' '.join(tstop.split('T'))[:-1]
+    tstart = ' '.join(tstart.split('T'))[:-6]  # -6 to slice off timezone
+    tstop = ' '.join(tstop.split('T'))[:-6]
 
     # format tstart, tstop
     tstart = datetime.datetime.strptime(tstart, '%Y-%m-%d %H:%M:%S')

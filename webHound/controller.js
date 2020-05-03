@@ -22,7 +22,7 @@ var layout = {
   }
 };
 
-Plotly.newPlot('temperaturePlot', [{}], layout);
+Plotly.newPlot('temperaturePlot', [], layout);
 
 app.controller('pyzzaController', ['$scope', '$http',
 function($scope, $http) {
@@ -114,8 +114,8 @@ function($scope, $http) {
 
             // build url
             var url = baseSensorUrl + '/getTemp';
-            url = url + '?tstart=' + tstart.utc().format();
-            url = url + '&tstop=' + tstop.utc().format();
+            url = url + '?tstart=' + tstart.format();
+            url = url + '&tstop=' + tstop.format();
             url = url + '&device=' + device;
 
             $http.get(url).then(function(response) {
