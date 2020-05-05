@@ -6,7 +6,7 @@ import datetime as dt
 import sys
 import gpiozero
 
-import SensorDB
+from SensorDB import DataInterface
 import common
 
 logger = common.get_logger(__name__)
@@ -16,7 +16,7 @@ logger = common.get_logger(__name__)
 DEVICE = socket.gethostname()
 
 # create database interface
-di = SensorDB.DataInterface()
+di = DataInterface()
 
 # command line switch to use local test data instead of sensor
 if "-test" in sys.argv:
@@ -24,15 +24,21 @@ if "-test" in sys.argv:
     device_folder = glob.glob(base_dir + '/temp*')[0]
     device_file   = device_folder + '/test_w1_slave.txt'
 else:
-    # set pins
-    os.system('modprobe w1-gpio')
-    os.system('modprobe w1-therm')
+    try:
+        # set pins
+        os.system('modprobe w1-gpio')
+        os.system('modprobe w1-therm')
+        logger.info('pins set up')
 
-    # set base directory
-    base_dir      = '/sys/bus/w1/devices/'
-    device_folder = glob.glob(base_dir + '28*')[0]
-    device_file   = device_folder + '/w1_slave'
+        # set base directory
+        base_dir      = '/sys/bus/w1/devices/'
+        device_folder = glob.glob(base_dir + '28*')[0]
+        device_file   = device_folder + '/w1_slave'
+        logger.info('directory set, reading temp from file: {}'.format(device_file))
 
+    except Exception as e:
+        logger.error("unable to setup access to temperature device", exc_info=True)
+        raise e
 
 def _convert_c_to_f(temp_c):
     temp_f = temp_c * (9.0 / 5) + 32.
