@@ -1,6 +1,28 @@
 var app = angular.module('pyzzaApp', ['ngMaterial']);
 
-Plotly.newPlot('temperaturePlot', [{}]);
+var layout = {
+  title: {
+    text:'Temperature',
+    font: {
+      family: 'Courier New, monospace',
+      size: 24
+    },
+    xref: 'paper',
+    x: 0.05,
+  },
+  yaxis: {
+    title: {
+      text: 'Temperature [Degrees F]',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    }
+  }
+};
+
+Plotly.newPlot('temperaturePlot', [], layout);
 
 app.controller('pyzzaController', ['$scope', '$http',
 function($scope, $http) {
@@ -21,7 +43,7 @@ function($scope, $http) {
     $scope.deviceList = ['Peach', 'Pumpkin', 'Pecan'];
     $scope.deviceSelected = [$scope.deviceList[0]];
 
-    $scope.tempData = null;
+    $scope.tempData = [];
     $scope.tempTraces = [];
     $scope.currentTemp = null;
     $scope.sensorTypeSelected = $scope.categories[0];
@@ -80,54 +102,42 @@ function($scope, $http) {
         return;
     };
 
-    $scope.plotSelected = function() {
-        for (i = 0; i < $scope.deviceSelected.length; i++) {
-            $scope.getTempData($scope.deviceSelected[i]);
-        }
-    };
-
     $scope.getTempData = function(device) {
+        Plotly.react('temperaturePlot', [], layout);
+        $scope.tempTraces = [];
+        $scope.tempData   = [];
+        for (i = 0; i < $scope.deviceSelected.length; i++) {
+            var device = $scope.deviceSelected[i];
+            timeRange = $scope.getTimeWindow($scope.timerangeSelected.value);
+            var tstart = timeRange[0];
+            var tstop = timeRange[1];
 
-        timeRange = $scope.getTimeWindow($scope.timerangeSelected.value);
-        var tstart = timeRange[0];
-        var tstop = timeRange[1];
+            // build url
+            var url = baseSensorUrl + '/getTemp';
+            url = url + '?tstart=' + tstart.format();
+            url = url + '&tstop=' + tstop.format();
+            url = url + '&device=' + device;
 
-        // build url
-        var url = baseSensorUrl + '/getTemp';
-        url = url + '?tstart=' + tstart.utc().format();
-        url = url + '&tstop=' + tstop.utc().format();
-        url = url + '&device=' + device;
+            $http.get(url).then(function(response) {
 
-        var data = null;
+                $scope.tempData.push(response.data);
 
-        $http.get(url).then(function(response) {
-            $scope.tempData = response.data;
-            data = response.data;
-            len = $scope.tempData.tempf.length;
-            $scope.currentTemp = $scope.tempData.tempf[len - 1];
-            $scope.displayTemperature(response.data);
-        }, $scope.returno);
-//      $scope.displayTemperature(data)
-    };
+                var trace = {
+                    name: response.data.name,
+                    x: response.data.time,
+                    y: response.data.tempf,
+                    mode: 'markers',
+                    type: 'scatter',
+                    showlegend: true
+                };
 
-    $scope.displayTemperature = function(data) {
-//        $scope.getTempData();
+                $scope.tempTraces.push(trace);
+                Plotly.addTraces('temperaturePlot', [trace]);
 
-        if (data !== null) {
-//            len = data.tempf.length;
-            // $scope.currentTemp = $scope.tempData.tempf[len - 1];
-            var tempf = {
-                name: data.name,
-                x: data.time,
-                y: data.tempf,
-                mode: 'markers',
-                type: 'scatter'
-            };
-//            $scope.tempTraces = [tempf];
-//            Plotly.newPlot('temperaturePlot', [tempf]);
+            }, $scope.returno);
         }
-        Plotly.react('temperaturePlot', [tempf]);
     };
+
 
 }
 

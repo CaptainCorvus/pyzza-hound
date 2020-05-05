@@ -148,6 +148,7 @@ class DataInterface:
         stats['min']    = tempf[id_min]
         stats['tmax']   = time[id_max]
         stats['tmin']   = time[id_min]
+        stats['current_temp'] = tempf[-1]
 
         return stats
 
