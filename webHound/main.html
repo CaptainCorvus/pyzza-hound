@@ -15,7 +15,13 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
         <!-- Include the AngularJS library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
 
         <!-- Include the plotly library -->
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -26,6 +32,7 @@
         <nav id="header" class="navbar fixed-top">
             <a class="navbar-brand">Sensor Hound</a>
             <div class="row">
+                <!--
                 <div class="col-lg-2 col-md-2" id="deviceDropdown">
                     <i>Source</i>
                     <select name="deviceSelect" ng-model="deviceSelected" ng-options="d for d in deviceList"></select>
@@ -35,55 +42,26 @@
                     <select name="sensorSelect" id="sensorSelect" ng-model="sensorTypeSelected">
                         <option ng-repeat="c in categories">{{c}}</option>
                     </select>
+                </div> -->
+                <div class="col-lg-4 col-md-2" id="deviceCheckBox">
+                    <i>Source</i>
+                    <div ng-repeat="d in deviceList">
+                        <input type="checkbox" ng-checked="exists(d, deviceSelected)" ng-click="checkboxToggle(d, deviceSelected)">
+                            {{d}}
+                        </input>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-2" id="deviceCheckBox">
-                    <div ng-dropdown-multiselect="" options="deviceList" selected-model="selectedDevices" checkboxes="true"></div>
-                </div>
-                <div class="col-lg-2 col-md-2">
+                <div class="col-lg-4 col-md-2">
                     <i>Time range:</i>
                     <select ng-model="timerangeSelected" ng-options="range.name for range in quickTimeRanges"></select>
                 </div>
-                <!-- <div class="col-lg-2 col-md-2">
-                    <i>Start</i>
-                    <input type="datetime-local" id="inputStart" name="input" ng-model="inputDate.start"
-                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
-                </div>
-                <div class="col-lg-2 col-md-2">
-                    <i>Start</i>
-                    <input type="datetime-local" id="inputStop" name="input" ng-model="inputDate.stop"
-                           placeholder="yyyy-MM-dd HH:mm:ss" min="2001-01-01 00:00:00" max="2020-12-3100:00:00">
-                </div> -->
-                <div class="col-lg-4 col-md-4">
+
+                <div class="col-lg-4 col-md-2">
                     <button type="button" class="btn btn-light" ng-click="getTempData()">load</button>
-                    <button type="button" class="btn btn-light" ng-click="displayTemperature()">plot</button>
+                    <button type="button" class="btn btn-light" ng-click="plotSelected()">plot</button>
                 </div>
             </div>
-            <!-- navbar-expand-md navbar-light bg-light
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" ng-click="getTempData()">Load</a>
-                            <a class="dropdown-item" ng-click="displayTemperature()">Plot</a>
-                            <a class="dropdown-item">Something else here</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            -->
+
         </nav>
 
         <main role="main" class="container">
