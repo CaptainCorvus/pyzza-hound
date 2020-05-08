@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, query
 from sqlalchemy import Column, Integer, String, DateTime, Float, VARCHAR
 import numpy as np
+import pandas as pd
 
 
 """
@@ -104,6 +105,29 @@ class DataInterface:
         session.commit()
         session.close()
 
+    def find_data_gaps(self, data, threshold=None):
+        """
+
+        :param tstart:
+        :param tstop:
+        :param device:
+        :return:
+        """
+        #df = self.get_temp(tstart, tstop, device=device)
+
+        df = data.copy()
+
+        df['diff'] = df['time'].diff()
+
+        df = df.set_index('time')
+
+        counts = df['diff'].value_counts()
+
+        if threshold is not None:
+            view = df[df['diff'] > threshold]
+
+        return view, counts
+
     def add_temperature_reading(self, new_reading):
         """
         Add a temperature reading to the mysqldb
@@ -152,6 +176,51 @@ class DataInterface:
 
         return stats
 
+    def to_dataframe(self, data, index=None):
+        """
+
+        :param data:
+        :type data: dict
+        :return:
+        """
+        df = pd.DataFrame(data)
+        if 'time' in df.columns:
+            df['time'] = pd.to_datetime(df['time'])
+        if index is not None and index in df.columns:
+            df.set_index(inplace=True)
+        return df
+
+
+
+    def get_temp(self, tstart, tstop, device=None):
+        """
+
+        :param tstart:
+        :param tstop:
+        :return:
+        """
+        # tstart, tstop should be datetime objects
+        if not isinstance(tstart, datetime.datetime) or \
+                not isinstance(tstop, datetime.datetime):
+            raise TypeError
+        if device is None:
+            device = DeviceInfo.DEFAULT_DEVICES['temperature']
+
+        session = self.create_session()
+
+        # build the query
+        qry = session.query(TemperatureData) \
+            .filter(TemperatureData.Time >= tstart) \
+            .filter(TemperatureData.Time <= tstop) \
+            .filter(TemperatureData.Device == device)  # .all()
+
+        time, tempc, tempf = self._parse_data(qry)
+
+        df = self.to_dataframe({'time': time, 'tempc': tempc, 'tempf': tempf})
+
+        session.close()
+
+        return df
 
     def get_temp_readings(self, tstart, tstop, device=None):
         """

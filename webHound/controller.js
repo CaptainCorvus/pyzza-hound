@@ -19,10 +19,11 @@ var layout = {
         color: '#7f7f7f'
       }
     }
-  }
+  },
+  hovermode: 'closest'
 };
 
-Plotly.newPlot('temperaturePlot', [], layout);
+Plotly.newPlot('temperaturePlot', [], layout, {displayModeBar: true});
 
 app.controller('pyzzaController', ['$scope', '$http',
 function($scope, $http) {
@@ -41,6 +42,11 @@ function($scope, $http) {
     $scope.categories = ['Temperature', 'Moisture', 'Sound', 'Light'];
     $scope.tempFields = ['Device', 'Current temp', 'Min Temp', 'Max Temp', 'Mean Temp'];
     $scope.deviceList = ['Peach', 'Pumpkin', 'Pecan'];
+    $scope.traceColors = {
+        'peach': '#1f77b4',
+        'pumpkin': '#ff7f0e',  // safety orange
+        'pecan':   '#2ca02c',  // cooked asparagus green
+    };
     $scope.deviceSelected = [$scope.deviceList[0]];
 
     $scope.tempData = [];
@@ -126,9 +132,12 @@ function($scope, $http) {
                     name: response.data.name,
                     x: response.data.time,
                     y: response.data.tempf,
+                    color: $scope.traceColors[response.data.name],
                     mode: 'markers',
                     type: 'scatter',
-                    showlegend: true
+                    showlegend: true,
+                    hovertemplate:'Time: %{x}<br>' +
+                                  'Temp: %{y:.2f}'
                 };
 
                 $scope.tempTraces.push(trace);
