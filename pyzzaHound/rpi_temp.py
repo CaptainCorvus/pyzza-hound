@@ -90,7 +90,7 @@ def parse_temperature():
 while True:
     try:
         is_valid, temp_c, time = parse_temperature()
-
+        
         # only operate on valid temperature readings
         if not is_valid:
             logger.warning("Not a valid reading: {}".format(temp_c))
